@@ -52,7 +52,7 @@ The spec left these explicitly to the plan ("not architecturally significant"):
 
 ## Target repo layout (delta over current tree)
 
-```
+```text
 pms-ai/
   .claude-plugin/
     plugin.json                 # NEW — plugin manifest
