@@ -78,6 +78,16 @@ def test_init_rejects_bad_project_name(temp_home: Path) -> None:
         config.init("acme", "Acme", {"bad name": "~/repos/x"})
 
 
+def test_init_malformed_template_raises(
+    temp_home: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    bad = tmp_path / "bad.template.yaml"
+    bad.write_text("organization: [not, a, mapping]\n")
+    monkeypatch.setenv("PMS_AI_TEMPLATE", str(bad))
+    with pytest.raises(config.ConfigError, match="invalid config template"):
+        config.init("acme", "Acme", {"web": "~/repos/web"})
+
+
 # --------------------------------------------------------------------------- #
 # resolve_project precedence
 # --------------------------------------------------------------------------- #

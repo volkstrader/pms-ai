@@ -18,6 +18,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
+from ruamel.yaml.error import YAMLError
 
 __all__ = [
     "ConfigError",
@@ -259,11 +260,16 @@ def init(
     try:
         with template.open() as f:
             data = yaml.load(f)
-    except OSError as exc:
+    except (OSError, YAMLError) as exc:
         raise ConfigError(
             f"could not read config template at {template}: {exc} "
             "(set PMS_AI_TEMPLATE or reinstall the plugin)"
         ) from exc
+    if not isinstance(data, dict) or not isinstance(data.get("organization"), dict):
+        raise ConfigError(
+            f"invalid config template at {template}: expected a top-level "
+            "'organization' mapping"
+        )
     data["organization"]["key"] = org_key
     data["organization"]["name"] = org_name
     data["current_project"] = current_project
