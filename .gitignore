@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- pms-ai: extra secret/sensitive-file hardening (public repo) ---
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+secrets.*
+*.local.json
+
+# Obsidian editor/workspace state
+.obsidian/
