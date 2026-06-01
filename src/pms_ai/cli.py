@@ -25,6 +25,7 @@ REQUIRED_SECRETS = ("PMS_AI_TOKEN",)
 # helpers
 # --------------------------------------------------------------------------- #
 def _parse_project_args(specs: list[str]) -> dict[str, str]:
+    """Parse repeated ``NAME=REPO`` specs into an ordered ``{name: repo}`` map."""
     projects: dict[str, str] = {}
     for spec in specs:
         if "=" not in spec:
@@ -40,6 +41,7 @@ def _parse_project_args(specs: list[str]) -> dict[str, str]:
 
 
 def _prompt(label: str, *, required: bool = True) -> str:
+    """Read a trimmed line from stdin, re-prompting while ``required`` and blank."""
     while True:
         value = input(f"{label}: ").strip()
         if value or not required:
@@ -48,6 +50,7 @@ def _prompt(label: str, *, required: bool = True) -> str:
 
 
 def _missing_secrets() -> list[str]:
+    """Return required secret names absent from the environment."""
     return [name for name in REQUIRED_SECRETS if not os.environ.get(name)]
 
 
@@ -55,6 +58,7 @@ def _missing_secrets() -> list[str]:
 # commands
 # --------------------------------------------------------------------------- #
 def cmd_onboard(args: argparse.Namespace) -> int:
+    """Bootstrap the org config, prompting for anything not supplied via flags."""
     projects = _parse_project_args(args.project)
     key = args.key
     name = args.name
@@ -84,12 +88,18 @@ def cmd_onboard(args: argparse.Namespace) -> int:
 
 
 def cmd_use(args: argparse.Namespace) -> int:
+    """Set the active project (delegates to ``config.use``)."""
     config.use(args.project)
     print(f"Active project: {args.project}")
     return 0
 
 
 def cmd_show(args: argparse.Namespace) -> int:
+    """Print the org, projects, resolved active project, and env-secret status.
+
+    Returns a non-zero exit code if a required secret is missing (unless
+    ``--skip-secrets``).
+    """
     cfg = config.load()
     print(f"organization: {cfg.organization.name} ({cfg.organization.key})")
     print("projects:")
@@ -125,6 +135,7 @@ def cmd_show(args: argparse.Namespace) -> int:
 # parser
 # --------------------------------------------------------------------------- #
 def build_parser() -> argparse.ArgumentParser:
+    """Build the argparse parser for the ``pms-ai`` CLI and its subcommands."""
     parser = argparse.ArgumentParser(prog="pms-ai", description="pms-ai configuration CLI")
     parser.add_argument("--version", action="version", version=f"pms-ai {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -162,6 +173,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point: dispatch the subcommand, mapping ConfigError to exit 2."""
     parser = build_parser()
     args = parser.parse_args(argv)
     try:

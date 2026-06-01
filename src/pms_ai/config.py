@@ -56,21 +56,29 @@ class ConfigError(Exception):
 # Typed model
 # --------------------------------------------------------------------------- #
 class Organization(BaseModel):
+    """The single org this install represents (``key`` doubles as the dir name)."""
+
     key: str
     name: str
 
 
 class Project(BaseModel):
+    """A registered project, identified by its repo path."""
+
     repo: str  # stored verbatim (``~`` / ``${VAR}`` preserved for portability)
 
 
 class Config(BaseModel):
+    """The full ``config.yaml`` document: org + active project + project map."""
+
     organization: Organization
     current_project: str | None = None
     projects: dict[str, Project] = {}
 
 
 class ResolvedProject(BaseModel):
+    """A project resolved to its name and an expanded, absolute repo path."""
+
     name: str
     repo: Path  # expanded, absolute
 
