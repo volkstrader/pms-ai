@@ -220,6 +220,7 @@ __marimo__/
 # --- pms-ai: extra secret/sensitive-file hardening (public repo) ---
 .env.*
 !.env.example
+!.env.schema
 *.pem
 *.key
 *.p12
