@@ -1,0 +1,6 @@
+{
+  "name": "pms-ai",
+  "version": "0.1.0",
+  "description": "A staging ground for projects + dynamic multi-agent workflows. Subsystem #1: plugin shell + config core (the /onboard command, the config skill, and the vendored pms-ai CLI).",
+  "author": { "name": "pms-ai" }
+}

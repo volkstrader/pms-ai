@@ -1,0 +1,15 @@
+{
+  "name": "pms-ai",
+  "owner": { "name": "pms-ai" },
+  "metadata": {
+    "description": "Self-hosting marketplace for the pms-ai plugin.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "pms-ai",
+      "source": "./",
+      "description": "Staging ground for projects + config core (subsystem #1)."
+    }
+  ]
+}
