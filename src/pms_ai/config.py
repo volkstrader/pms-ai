@@ -247,8 +247,15 @@ def init(
         )
 
     yaml = _yaml()
-    with _template_path().open() as f:
-        data = yaml.load(f)
+    template = _template_path()
+    try:
+        with template.open() as f:
+            data = yaml.load(f)
+    except OSError as exc:
+        raise ConfigError(
+            f"could not read config template at {template}: {exc} "
+            "(set PMS_AI_TEMPLATE or reinstall the plugin)"
+        ) from exc
     data["organization"]["key"] = org_key
     data["organization"]["name"] = org_name
     data["current_project"] = current_project

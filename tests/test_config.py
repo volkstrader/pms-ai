@@ -149,7 +149,7 @@ def test_use_rewrites_only_current_project(temp_home: Path) -> None:
     # everything except the current_project line is byte-for-byte unchanged
     diff = [
         (b, a)
-        for b, a in zip(before.splitlines(), after.splitlines())
+        for b, a in zip(before.splitlines(), after.splitlines(), strict=True)
         if b != a
     ]
     assert len(diff) == 1
